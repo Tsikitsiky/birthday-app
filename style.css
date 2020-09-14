@@ -1,0 +1,22 @@
+article {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    column-gap: 1rem;
+    margin-bottom: 1rem;
+    background-color: azure;
+}
+
+img {
+    border-radius: 50%;
+}
+
+button img {
+    width: 30px;
+    height: 30px;
+}
+
+button {
+    border: none;
+    background-color: rgba(0, 0, 0, 0);
+}
