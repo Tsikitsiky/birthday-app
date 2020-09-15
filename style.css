@@ -27,7 +27,7 @@ button {
 
 .popup {
 	background: hsla(0, 0%, 30%, 0.5);
-	position: absolute;
+	position: fixed;
 	height: 100vh;
 	width: 100vw;
 	transition: all 0.25s;

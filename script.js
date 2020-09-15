@@ -10,7 +10,14 @@ async function fetchData() {
     return data;
 }
 
-let people = Array.from(fetchData());
+let people = [];
+
+async function storeLs() {
+    people = await fetchData();
+    localStorage.setItem('peopleBirthday', JSON.stringify(people));
+}
+
+storeLs();
 
 //get the array from ls
 const initLocalStorage = () => {
@@ -21,16 +28,17 @@ const initLocalStorage = () => {
     } else {
         people = [];
     }
-    main.dispatchEvent(new CustomEvent('pleaseUpdate'));
+    populateTheList(people)
+   dispatchEvent(new CustomEvent('pleaseUpdate'));
 };
 
 const updateLs = () => {
     localStorage.setItem('peopleBirthday', JSON.stringify(people));
+    
 }
-console.log(people)
 
-async function populateTheList() {
-     people = await fetchData();
+ function populateTheList(people) {
+     //people = await fetchData();
     //sort by their birthdays
     const peopleSorted = people.sort((person1, person2) => person2.birthday - person1.birthday);
     const html = peopleSorted.map(person => 
@@ -53,8 +61,6 @@ async function populateTheList() {
         `);
 
         main.insertAdjacentHTML("beforeend",html.join(''));
-        //store the data in local storage
-        localStorage.setItem('peopleBirthday', JSON.stringify(people));
 }
 
 
@@ -64,7 +70,7 @@ async function populateTheList() {
 //   )
 //   console.log(result)
 
-populateTheList();
+
 
 //destroy popup
 async function destroyPopup(popup) {
@@ -114,9 +120,9 @@ function addPeople() {
         console.log(newPerson);
         people.push(newPerson);
         console.log(people);
-        populateTheList();
         destroyPopup(addForm);
         main.dispatchEvent(new CustomEvent('pleaseUpdate'));
+        populateTheList(people);
     });
 
     //cancel
@@ -133,7 +139,8 @@ function addPeople() {
 }
 
 const editPeople = (id) => {
-    let personToEdit = people.find(person => person.id === id);
+    let personToEdit = people.find(person => person.id === id || person.id === Number(id));
+    console.log(personToEdit);
     return new Promise(async function(resolve) {
         const editForm = document.createElement('form');
         editForm.classList.add('popup');
@@ -167,10 +174,10 @@ const editPeople = (id) => {
             personToEdit.firstName = editForm.firstName.value;
             personToEdit.birthday = editForm.birthday.value;
             personToEdit.picture = editForm.picture.value;
-            console.log(people)
-            populateTheList(people);
             destroyPopup(editForm);
             main.dispatchEvent(new CustomEvent('pleaseUpdate'));
+            populateTheList(people);
+            console.log(people)     
         }, {once: true});
 
         //cancel
@@ -187,12 +194,51 @@ const editPeople = (id) => {
     });
 }
 
+//delete a person 
+const deletePeople = (id) => {
+    const personToDelete = people.find(person => person.id === id);
+    return new Promise(async function(resolve) {
+		const deletePopup = document.createElement('div');
+		deletePopup.classList.add('popup');
+        deletePopup.insertAdjacentHTML("afterbegin", `
+		
+		<div>
+			<p>Are you sure to delete <bold>${personToDelete.lastName} ${personToDelete.firstName}</bold>?</p>
+			<button class="yes">Yes</button>
+			<button class="cancel">Cancel</button>
+		</div>
+		`);
+
+		deletePopup.addEventListener('click', (e) => {
+			if(e.target.matches('button.yes')) {
+				people = people.filter(person => person.id !== id);
+				populateTheList(people);
+                destroyPopup(deletePopup);
+				console.log(people)
+			}
+
+			if(e.target.matches('button.cancel')){
+				destroyPopup(deletePopup);
+			}
+		})
+		resolve();
+		document.body.appendChild(deletePopup)
+        deletePopup.classList.add('open');
+        main.dispatchEvent(new CustomEvent('pleaseUpdate'));
+	});
+}
+
 //handle clicks
 const handleClicks = (e) => {
     if(e.target.closest('button.edit')) {
         const article = e.target.closest('article');
         const id = article.dataset.id;
         editPeople(id);
+    }
+    if(e.target.closest('button.delete')) {
+        const article = e.target.closest('article');
+        const id = article.dataset.id;
+        deletePeople(id);
     }
 }
 
