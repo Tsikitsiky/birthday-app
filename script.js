@@ -1,23 +1,18 @@
-//import {differenceInYears} from 'date-fns';
+//import {  } from 'date-fns'
 
 const main = document.querySelector('main');
 const addBtn = document.querySelector('.add');
 
-// this function fetches all the people
-async function fetchData() {
-    const response = await fetch('/people.json');
-    const data = await response.json();
-    return data;
-}
-
 let people = [];
 
-async function storeLs() {
-    people = await fetchData();
-    localStorage.setItem('peopleBirthday', JSON.stringify(people));
-}
 
-storeLs();
+// this function fetches all the people
+async function fetchData() {
+    const response = await fetch('./people.json');
+    const data = await response.json();
+    updateLs();
+    return data;
+}
 
 //get the array from ls
 const initLocalStorage = () => {
@@ -26,19 +21,21 @@ const initLocalStorage = () => {
     if(lsItems) {
         people = lsItems
     } else {
-        people = [];
+        fetchData()
+
     }
-    populateTheList(people)
+    //populateTheList();
    dispatchEvent(new CustomEvent('pleaseUpdate'));
 };
+initLocalStorage();
 
 const updateLs = () => {
     localStorage.setItem('peopleBirthday', JSON.stringify(people));
-    
 }
 
- function populateTheList(people) {
+function populateTheList() {
      //people = await fetchData();
+     //console.log(people);
     //sort by their birthdays
     const peopleSorted = people.sort((person1, person2) => person2.birthday - person1.birthday);
     const html = peopleSorted.map(person => 
@@ -60,11 +57,12 @@ const updateLs = () => {
         </article>
         `);
 
-        main.insertAdjacentHTML("beforeend",html.join(''));
+        main.innerHTML = html.join('');
+       
 }
 
 
-// var result = differenceInYears(
+// var result = formatDistance(
 //     new Date(2015, 1, 11),
 //     new Date(2013, 11, 31)
 //   )
@@ -117,12 +115,12 @@ function addPeople() {
             picture: "https://s3.amazonaws.com/uifaces/faces/twitter/jpenico/128.jpg",
             birthday: addForm.birthday.value
         }
-        console.log(newPerson);
+        //console.log(newPerson);
         people.push(newPerson);
-        console.log(people);
+        //console.log(people);
         destroyPopup(addForm);
         main.dispatchEvent(new CustomEvent('pleaseUpdate'));
-        populateTheList(people);
+        populateTheList();
     });
 
     //cancel
@@ -140,7 +138,7 @@ function addPeople() {
 
 const editPeople = (id) => {
     let personToEdit = people.find(person => person.id === id || person.id === Number(id));
-    console.log(personToEdit);
+    //console.log(personToEdit);
     return new Promise(async function(resolve) {
         const editForm = document.createElement('form');
         editForm.classList.add('popup');
@@ -174,9 +172,11 @@ const editPeople = (id) => {
             personToEdit.firstName = editForm.firstName.value;
             personToEdit.birthday = editForm.birthday.value;
             personToEdit.picture = editForm.picture.value;
+            //debugger;
+            populateTheList();
             destroyPopup(editForm);
             main.dispatchEvent(new CustomEvent('pleaseUpdate'));
-            populateTheList(people);
+
             console.log(people)     
         }, {once: true});
 
@@ -196,7 +196,8 @@ const editPeople = (id) => {
 
 //delete a person 
 const deletePeople = (id) => {
-    const personToDelete = people.find(person => person.id === id);
+    const personToDelete = people.find(person => person.id === id || person.id === Number(id));
+    console.log(personToDelete );
     return new Promise(async function(resolve) {
 		const deletePopup = document.createElement('div');
 		deletePopup.classList.add('popup');
@@ -211,8 +212,9 @@ const deletePeople = (id) => {
 
 		deletePopup.addEventListener('click', (e) => {
 			if(e.target.matches('button.yes')) {
-				people = people.filter(person => person.id !== id);
-				populateTheList(people);
+                people = people.filter(person => person.id !== id);
+                main.dispatchEvent(new CustomEvent('pleaseUpdate'));
+				populateTheList();
                 destroyPopup(deletePopup);
 				console.log(people)
 			}
@@ -224,7 +226,7 @@ const deletePeople = (id) => {
 		resolve();
 		document.body.appendChild(deletePopup)
         deletePopup.classList.add('open');
-        main.dispatchEvent(new CustomEvent('pleaseUpdate'));
+        // main.dispatchEvent(new CustomEvent('pleaseUpdate'));
 	});
 }
 
@@ -247,4 +249,5 @@ const handleClicks = (e) => {
 addBtn.addEventListener('click', addPeople);
 main.addEventListener('pleaseUpdate', updateLs);
 main.addEventListener('click', handleClicks);
-initLocalStorage();
+window.addEventListener('DOMContentLoaded', populateTheList);
+// initLocalStorage();
