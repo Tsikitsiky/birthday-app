@@ -18,10 +18,16 @@ button img {
 
 button {
     border: none;
-    background-color: rgba(0, 0, 0, 0);
+	background-color: rgba(0, 0, 0, 0);
+	border-radius: 5px;
 }
 
 .add {
+	position: fixed;
+	border-radius: 10px;
+	top: 5%;
+	left: 80%;
+	height: 40px;
     background-color: salmon;
 }
 
