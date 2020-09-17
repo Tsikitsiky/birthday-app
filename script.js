@@ -1,11 +1,12 @@
-//import {  } from 'date-fns'
+//var differenceInYears = require('date-fns/difference_in_years')
 
 const main = document.querySelector('main');
 const addBtn = document.querySelector('.add');
 
 let people = [];
 
-
+//npm i date-fns.org/v1.29.0/docs/differenceInYears
+//npm i @bit/date-fns.date-fns.difference-in-years
 // this function fetches all the people
 async function fetchData() {
     const response = await fetch('./people.json');
@@ -34,16 +35,74 @@ const updateLs = () => {
 }
 
 function populateTheList() {
-     //people = await fetchData();
+     
      //console.log(people);
     //sort by their birthdays
     const peopleSorted = people.sort((person1, person2) => person2.birthday - person1.birthday);
-    const html = peopleSorted.map(person => 
-        `
+
+
+    const html = peopleSorted.map(person => {
+        //manage the dates
+        const age = new Date().getFullYear() - new Date(person.birthday).getFullYear();
+        let brtDate = new Date(person.birthday).getDate();
+        if(brtDate > 3) {
+            date = `${brtDate}th`;
+        }
+         switch (brtDate % 10) {
+             case 1: 
+                date = `${brtDate}st`;
+                break;
+            case 2:
+                date = `${brtDate}nd`;
+                break;
+            case 3:
+                date = `${brtDate}rd`;
+
+         };
+        const brtMonth = new Date(person.birthday).getMonth();
+        switch (brtMonth) {
+            case 0:
+              month = "January";
+              break;
+            case 1:
+              month = "February";
+              break;
+            case 2:
+               month = "March";
+              break;
+            case 3:
+              month = "April";
+              break;
+            case 4:
+              month = "May";
+              break;
+            case 5:
+              month = "June";
+              break;
+            case 6:
+              month = "July";
+            case 7:
+                month = "August";
+                break;
+            case 8:
+                month = "September";
+                break;
+            case 9:
+                month = "October";
+                break;
+            case 10:
+                month = "November";
+                break;
+            case 11:
+                month = "December";
+          };
+          const oneDay = 24 * 60 * 60 * 1000;
+          var daysLeft =  Math.round(Math.abs((new Date(new Date()) - new Date(new Date().getFullYear(), brtMonth, brtMonth)) / oneDay));
+        return `
         <article data-id="${person.id}">
             <img src="${person.picture}" alt="${person.firstName} ${person.lastName}">
-            <p>${person.firstName} ${person.lastName} <br> Turns ${person.birthday} on ${person.birthday}</p>
-            <p>${person.birthday}Days</p>
+            <p>${person.firstName} ${person.lastName} <br> Turns ${age} on ${date} ${month}</p>
+            <p>${daysLeft}Days</p>
             <p>
                 <button class="edit">
                     <img src="../assets/edit.svg">
@@ -55,18 +114,13 @@ function populateTheList() {
                 </button>
             </p>
         </article>
-        `);
+        `
+    }
+       );
 
         main.innerHTML = html.join('');
        
 }
-
-
-// var result = formatDistance(
-//     new Date(2015, 1, 11),
-//     new Date(2013, 11, 31)
-//   )
-//   console.log(result)
 
 
 
@@ -95,7 +149,7 @@ function addPeople() {
         </fieldset>
         <fieldset>
             <label>Birthday</label>
-            <input type="text" name="birthday">
+            <input type="date" name="birthday">
         </fieldset>
         <fieldset>
             <label>Picture</label>
@@ -116,7 +170,7 @@ function addPeople() {
             birthday: addForm.birthday.value
         }
         //console.log(newPerson);
-        people.push(newPerson);
+        people.unshift(newPerson);
         //console.log(people);
         destroyPopup(addForm);
         main.dispatchEvent(new CustomEvent('pleaseUpdate'));
@@ -154,7 +208,7 @@ const editPeople = (id) => {
             </fieldset>
             <fieldset>
                 <label>Birthday</label>
-                <input type="text" name="birthday" value="${personToEdit.birthday}">
+                <input type="date" name="birthday" value="${personToEdit.birthday}">
             </fieldset>
             <fieldset>
                 <label>Picture</label>
@@ -197,7 +251,6 @@ const editPeople = (id) => {
 //delete a person 
 const deletePeople = (id) => {
     const personToDelete = people.find(person => person.id === id || person.id === Number(id));
-    console.log(personToDelete );
     return new Promise(async function(resolve) {
 		const deletePopup = document.createElement('div');
 		deletePopup.classList.add('popup');
