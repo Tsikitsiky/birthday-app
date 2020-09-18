@@ -5,15 +5,14 @@ const addBtn = document.querySelector('.add');
 
 let people = [];
 
-//npm i date-fns.org/v1.29.0/docs/differenceInYears
-//npm i @bit/date-fns.date-fns.difference-in-years
 // this function fetches all the people
 async function fetchData() {
     const response = await fetch('./people.json');
     const data = await response.json();
-    updateLs();
+    localStorage.setItem('peopleBirthday', JSON.stringify(data));
     return data;
 }
+
 
 //get the array from ls
 const initLocalStorage = () => {
@@ -23,7 +22,6 @@ const initLocalStorage = () => {
         people = lsItems
     } else {
         fetchData()
-
     }
     //populateTheList();
    dispatchEvent(new CustomEvent('pleaseUpdate'));
@@ -35,13 +33,8 @@ const updateLs = () => {
 }
 
 function populateTheList() {
-     
-     //console.log(people);
-    //sort by their birthdays
-    const peopleSorted = people.sort((person1, person2) => person2.birthday - person1.birthday);
-
-
-    const html = peopleSorted.map(person => {
+    //const peopleSorted = people.sort((person1, person2) => person2.birthday - person1.birthday);
+    const html = people.map(person => {
         //manage the dates
         const age = new Date().getFullYear() - new Date(person.birthday).getFullYear();
         let brtDate = new Date(person.birthday).getDate();
@@ -96,8 +89,31 @@ function populateTheList() {
             case 11:
                 month = "December";
           };
+
           const oneDay = 24 * 60 * 60 * 1000;
-          var daysLeft =  Math.round(Math.abs((new Date(new Date()) - new Date(new Date().getFullYear(), brtMonth, brtMonth)) / oneDay));
+        let today = new Date();
+        let year; 
+    
+    if(today.getMonth() > brtMonth) {
+        year = today.getFullYear() + 1;
+    } else if(today.getMonth() === brtMonth && today.getDate() > brtDate) {
+        year = today.getFullYear();
+    } else {
+        year = today.getFullYear();
+    }
+        let birthDay = new Date(year, brtMonth, brtDate); 
+        
+        
+        // To Calculate next year's birthday if passed already. 
+        // if (today.getMonth() === brtMonth && today.getDate() > brtDate) {
+        //     birthDay.setFullYear(birthDay.getFullYear() + 1) 
+        //     console.log(new Date(birthDay.setFullYear(birthDay.getFullYear() + 1)) 
+        //     )
+        
+           
+        // To Calculate the result in milliseconds and then converting into days 
+        let daysLeft =  Math.round(Math.abs((new Date(birthDay) - new Date(today)) / oneDay));
+
         return `
         <article data-id="${person.id}">
             <img src="${person.picture}" alt="${person.firstName} ${person.lastName}">
@@ -116,7 +132,7 @@ function populateTheList() {
         </article>
         `
     }
-       );
+       ).sort((person1, person2) => person2.birthday - person1.birthday);
 
         main.innerHTML = html.join('');
        
@@ -187,7 +203,6 @@ function addPeople() {
 
     document.body.appendChild(addForm);
     addForm.classList.add('open');
-    console.log(addForm)
 }
 
 const editPeople = (id) => {
@@ -197,6 +212,7 @@ const editPeople = (id) => {
         const editForm = document.createElement('form');
         editForm.classList.add('popup');
         editForm.innerHTML = `
+        
         <div>
             <fieldset>
                 <label>Last name</label>
@@ -208,7 +224,7 @@ const editPeople = (id) => {
             </fieldset>
             <fieldset>
                 <label>Birthday</label>
-                <input type="date" name="birthday" value="${personToEdit.birthday}">
+                <input type="text" name="birthday" value="${new Date(personToEdit.birthday)}">
             </fieldset>
             <fieldset>
                 <label>Picture</label>
@@ -229,9 +245,7 @@ const editPeople = (id) => {
             //debugger;
             populateTheList();
             destroyPopup(editForm);
-            main.dispatchEvent(new CustomEvent('pleaseUpdate'));
-
-            console.log(people)     
+            main.dispatchEvent(new CustomEvent('pleaseUpdate'));   
         }, {once: true});
 
         //cancel
@@ -255,23 +269,23 @@ const deletePeople = (id) => {
 		const deletePopup = document.createElement('div');
 		deletePopup.classList.add('popup');
         deletePopup.insertAdjacentHTML("afterbegin", `
-		
 		<div>
 			<p>Are you sure to delete <bold>${personToDelete.lastName} ${personToDelete.firstName}</bold>?</p>
 			<button class="yes">Yes</button>
 			<button class="cancel">Cancel</button>
 		</div>
 		`);
-
 		deletePopup.addEventListener('click', (e) => {
 			if(e.target.matches('button.yes')) {
+                //people = people.filter(person => person.id !== id || person.id !== Number(id));
+                if(typeof id === "string") {
+                    people = people.filter(person => person.id !== Number(id))
+                } 
                 people = people.filter(person => person.id !== id);
-                main.dispatchEvent(new CustomEvent('pleaseUpdate'));
+                main.dispatchEvent(new CustomEvent('pleaseUpdate')); 
 				populateTheList();
                 destroyPopup(deletePopup);
-				console.log(people)
 			}
-
 			if(e.target.matches('button.cancel')){
 				destroyPopup(deletePopup);
 			}
@@ -279,7 +293,7 @@ const deletePeople = (id) => {
 		resolve();
 		document.body.appendChild(deletePopup)
         deletePopup.classList.add('open');
-        // main.dispatchEvent(new CustomEvent('pleaseUpdate'));
+        main.dispatchEvent(new CustomEvent('pleaseUpdate'));
 	});
 }
 
@@ -303,4 +317,3 @@ addBtn.addEventListener('click', addPeople);
 main.addEventListener('pleaseUpdate', updateLs);
 main.addEventListener('click', handleClicks);
 window.addEventListener('DOMContentLoaded', populateTheList);
-// initLocalStorage();
