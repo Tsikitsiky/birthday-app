@@ -1,4 +1,5 @@
 //var differenceInYears = require('date-fns/difference_in_years')
+import {handleClicks} from './handlers.js';
 
 const main = document.querySelector('main');
 const addBtn = document.querySelector('.add');
@@ -38,6 +39,8 @@ function populateTheList() {
         //manage the dates
         const age = new Date().getFullYear() - new Date(person.birthday).getFullYear();
         let brtDate = new Date(person.birthday).getDate();
+        let date;
+        let month;
         if(brtDate > 3) {
             date = `${brtDate}th`;
         }
@@ -105,10 +108,10 @@ function populateTheList() {
         
         
         // To Calculate next year's birthday if passed already. 
-        // if (today.getMonth() === brtMonth && today.getDate() > brtDate) {
-        //     birthDay.setFullYear(birthDay.getFullYear() + 1) 
-        //     console.log(new Date(birthDay.setFullYear(birthDay.getFullYear() + 1)) 
-        //     )
+        if (today.getMonth() === brtMonth && today.getDate() > brtDate) {
+            birthDay.setFullYear(birthDay.getFullYear() + 1) 
+            console.log(new Date(birthDay.setFullYear(birthDay.getFullYear())) 
+            )}
         
            
         // To Calculate the result in milliseconds and then converting into days 
@@ -297,19 +300,6 @@ const deletePeople = (id) => {
 	});
 }
 
-//handle clicks
-const handleClicks = (e) => {
-    if(e.target.closest('button.edit')) {
-        const article = e.target.closest('article');
-        const id = article.dataset.id;
-        editPeople(id);
-    }
-    if(e.target.closest('button.delete')) {
-        const article = e.target.closest('article');
-        const id = article.dataset.id;
-        deletePeople(id);
-    }
-}
 
 
 //event listeners
