@@ -75,3 +75,16 @@ button {
 .popup button {
     background-color: darkcyan;
 }
+
+.filter-form {
+	display: flex;
+}
+
+.filter-form fieldset {
+	margin: 0;
+	border: none;
+}
+
+.filter-form label {
+	font-size: large;
+}

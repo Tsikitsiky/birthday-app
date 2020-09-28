@@ -1,19 +1,8 @@
 //var differenceInYears = require('date-fns/difference_in_years')
 import {handleClicks} from './handlers.js';
-
-const main = document.querySelector('main');
-const addBtn = document.querySelector('.add');
-
+import {main, addBtn, filterNameInput, filterMonthInput} from './elements.js';
+import {fetchData} from './libs.js'
 let people = [];
-
-// this function fetches all the people
-async function fetchData() {
-    const response = await fetch('./people.json');
-    const data = await response.json();
-    localStorage.setItem('peopleBirthday', JSON.stringify(data));
-    return data;
-}
-
 
 //get the array from ls
 const initLocalStorage = () => {
@@ -33,11 +22,35 @@ const updateLs = () => {
     localStorage.setItem('peopleBirthday', JSON.stringify(people));
 }
 
-function populateTheList() {
+//filter
+const filterList = e => {
+    populateTheList(e,filterNameInput.value, filterMonthInput.value)
+};
+
+filterNameInput.addEventListener('keyup', filterList);
+filterMonthInput.addEventListener('change', filterList);
+
+function populateTheList(e, filterName, filterMonth) {
     //const peopleSorted = people.sort((person1, person2) => person2.birthday - person1.birthday);
+    if(filterName) {
+        people = people.filter(person => {
+            let lowercaseFirstName = person.firstName.toLowerCase();
+            let lowercaseLastName = person.lastName.toLowerCase();
+            let lowercaseFilter = filterName.toLowerCase();
+            if(lowercaseFirstName.includes(lowercaseFilter) || lowercaseLastName.includes(lowercaseFilter)) {
+                return true;
+            } else {
+                return false;
+            }
+        })
+    }
+    if(filterMonth) {
+        console.log(filterMonth)
+        people = people.filter(person => new Date(person.birthday).getMonth() === filterMonth)
+    }
     const html = people.map(person => {
         //manage the dates
-        const age = new Date().getFullYear() - new Date(person.birthday).getFullYear();
+        let age = new Date().getFullYear() - new Date(person.birthday).getFullYear();
         let brtDate = new Date(person.birthday).getDate();
         let date;
         let month;
@@ -109,11 +122,12 @@ function populateTheList() {
         
         // To Calculate next year's birthday if passed already. 
         if (today.getMonth() === brtMonth && today.getDate() > brtDate) {
-            birthDay.setFullYear(birthDay.getFullYear() + 1) 
-            console.log(new Date(birthDay.setFullYear(birthDay.getFullYear())) 
-            )}
+            birthDay.setFullYear(birthDay.getFullYear() + 1);
+            age = (new Date().getFullYear() + 1) - new Date(person.birthday).getFullYear();
+            //console.log(new Date(birthDay.setFullYear(birthDay.getFullYear())))
+        };
+
         
-           
         // To Calculate the result in milliseconds and then converting into days 
         let daysLeft =  Math.round(Math.abs((new Date(birthDay) - new Date(today)) / oneDay));
 
@@ -208,7 +222,7 @@ function addPeople() {
     addForm.classList.add('open');
 }
 
-const editPeople = (id) => {
+export const editPeople = (id) => {
     let personToEdit = people.find(person => person.id === id || person.id === Number(id));
     //console.log(personToEdit);
     return new Promise(async function(resolve) {
@@ -266,7 +280,7 @@ const editPeople = (id) => {
 }
 
 //delete a person 
-const deletePeople = (id) => {
+export const deletePeople = (id) => {
     const personToDelete = people.find(person => person.id === id || person.id === Number(id));
     return new Promise(async function(resolve) {
 		const deletePopup = document.createElement('div');
@@ -299,6 +313,9 @@ const deletePeople = (id) => {
         main.dispatchEvent(new CustomEvent('pleaseUpdate'));
 	});
 }
+
+//search form
+
 
 
 
