@@ -46,7 +46,15 @@ function populateTheList(e, filterName, filterMonth) {
     }
     if(filterMonth) {
         console.log(filterMonth)
-        people = people.filter(person => new Date(person.birthday).getMonth() === filterMonth)
+        people = people.filter(person => {
+            let month = new Date(person.birthday).getMonth();
+            if(month == filterMonth) {
+                console.log(month);
+                return true;
+            } else {
+                return false;
+            }
+        })  
     }
     const html = people.map(person => {
         //manage the dates
@@ -259,7 +267,6 @@ export const editPeople = (id) => {
             personToEdit.firstName = editForm.firstName.value;
             personToEdit.birthday = editForm.birthday.value;
             personToEdit.picture = editForm.picture.value;
-            //debugger;
             populateTheList();
             destroyPopup(editForm);
             main.dispatchEvent(new CustomEvent('pleaseUpdate'));   
