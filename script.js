@@ -2,6 +2,7 @@
 import {handleClicks} from './handlers.js';
 import {main, addBtn, filterNameInput, filterMonthInput, filterForm} from './elements.js';
 import {fetchData} from './libs.js';
+import {birthdayCake, edit, trash} from './svg.js'
 let people = [];
 
 //get the array from ls
@@ -23,18 +24,18 @@ const updateLs = () => {
 }
 
 //filter
-const filterList = e => {
-    populateTheList(e,filterNameInput.value, filterMonthInput.value)
-};
+// const filterList = e => {
+//     populateTheList(e,filterNameInput.value, filterMonthInput.value)
+// };
 
 
-function populateTheList(e, filterName, filterMonth) {
+function populateTheList() {
     //const peopleSorted = people.sort((person1, person2) => person2.birthday - person1.birthday);
-    if(filterName) {
+    if(filterNameInput.value !== '') { 
         people = people.filter(person => {
             let lowercaseFirstName = person.firstName.toLowerCase();
             let lowercaseLastName = person.lastName.toLowerCase();
-            let lowercaseFilter = filterName.toLowerCase();
+            let lowercaseFilter = filterNameInput.value.toLowerCase();
             if(lowercaseFirstName.includes(lowercaseFilter) || lowercaseLastName.includes(lowercaseFilter)) {
                 return true;
             } else {
@@ -42,9 +43,9 @@ function populateTheList(e, filterName, filterMonth) {
             }
         })
     }
-    if(filterMonth) {
-        console.log(filterMonth)
-        people = people.filter(person => new Date(person.birthday).getMonth() == filterMonth)  
+    if(filterMonthInput.value !== '') {
+        //console.log(filterMonth)
+        people = people.filter(person => new Date(person.birthday).getMonth() == filterMonthInput.value)  
     }
     const html = people.map(person => {
         //manage the dates
@@ -88,6 +89,7 @@ function populateTheList(e, filterName, filterMonth) {
               break;
             case 6:
               month = "July";
+              break;
             case 7:
               month = "August";
               break;
@@ -127,14 +129,14 @@ function populateTheList(e, filterName, filterMonth) {
 
         
         // To Calculate the result in milliseconds and then converting into days 
-        let daysLeft =  Math.round(Math.abs((new Date(birthDay) - new Date(today)) / oneDay));
+        var daysLeft =  Math.round(Math.abs((new Date(birthDay) - new Date(today)) / oneDay));
 
         return `
         <article data-id="${person.id}">
             <img src="${person.picture}" alt="${person.firstName} ${person.lastName}">
-            <p>${person.firstName} ${person.lastName} <br> Turns ${age} on ${date} ${month}</p>
-            <p><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.701 2.701 0 00-1.5-.454M9 6v2m3-2v2m3-2v2M9 3h.01M12 3h.01M15 3h.01M21 21v-7a2 2 0 00-2-2H5a2 2 0 00-2 2v7h18zm-3-9v-2a2 2 0 00-2-2H8a2 2 0 00-2 2v2h12z"></path></svg>
-             in ${daysLeft} days</p>
+            <p>${person.firstName} ${person.lastName} <br> ${daysLeft === 0 ? `Today is ${person.firstName}'s birthday`: `Turns ${age} on ${date} ${month}`}</p>
+            <p>${daysLeft === 0 ? `${birthdayCake} ${birthdayCake} ${birthdayCake}` : `${birthdayCake}
+            in ${daysLeft} days`}</p>
             <p>
                 <button class="edit">
                     <img src="../assets/edit.svg">
@@ -148,7 +150,7 @@ function populateTheList(e, filterName, filterMonth) {
         </article>
         `
     }
-       ).sort((person1, person2) => person2.birthday - person1.birthday);
+       ).sort((person1, person2) => person2.daysLeft - person1.daysLeft);
 
         main.innerHTML = html.join('');
        
@@ -313,8 +315,8 @@ export const deletePeople = (id) => {
 }
 
 //event listeners
-filterNameInput.addEventListener('keyup', filterList);
-filterMonthInput.addEventListener('change', filterList);
+filterNameInput.addEventListener('input', populateTheList);
+filterMonthInput.addEventListener('change', populateTheList);
 addBtn.addEventListener('click', addPeople);
 main.addEventListener('pleaseUpdate', updateLs);
 main.addEventListener('click', handleClicks);
