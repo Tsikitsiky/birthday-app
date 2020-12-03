@@ -2,7 +2,8 @@
 import {handleClicks} from './handlers.js';
 import {main, addBtn, filterNameInput, filterMonthInput, filterForm} from './elements.js';
 import {fetchData} from './libs.js';
-import {birthdayCake, edit, trash} from './svg.js'
+import {birthdayCake, edit, trash} from './svg.js';
+import peopleData from "./people.json";
 let people = [];
 
 //get the array from ls
@@ -12,7 +13,8 @@ const initLocalStorage = () => {
     if(lsItems) {
         people = lsItems
     } else {
-        fetchData()
+        // fetchData()
+        people = peopleData
     }
     //populateTheList();
    dispatchEvent(new CustomEvent('pleaseUpdate'));
@@ -139,12 +141,12 @@ function populateTheList() {
             in ${daysLeft} days`}</p>
             <p>
                 <button class="edit">
-                    <img src="../assets/edit.svg">
+                    ${edit}
                 </button>
             </p>
             <p>
                 <button class="delete">
-                    <img src="../assets/trash.svg">
+                    ${trash}
                 </button>
             </p>
         </article>
