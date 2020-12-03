@@ -10,9 +10,16 @@ article {
     margin-bottom: 1rem;
 	background-color: #b8c1ec;
 	border-radius: 10px;
+	opacity: 0.7;
 }
 
-h1, h2, h3 {
+header,
+main {
+	max-width: 800px;
+	margin: auto;
+}
+
+body > header {
 	color: #fffffe;
 }
 
