@@ -1,0 +1,118 @@
+body {
+	background-color: #232946;
+}
+
+article {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    column-gap: 1rem;
+    margin-bottom: 1rem;
+	background-color: #b8c1ec;
+	border-radius: 10px;
+}
+
+h1, h2, h3 {
+	color: #fffffe;
+}
+
+img {
+    border-radius: 50%;
+}
+
+button img {
+    width: 30px;
+    height: 30px;
+}
+
+button {
+    border: none;
+	background-color: rgba(0, 0, 0, 0);
+	border-radius: 5px;
+}
+
+.add {
+	position: fixed;
+	border-radius: 10px;
+	top: 5%;
+	left: 80%;
+	height: 40px;
+    background-color: salmon;
+}
+
+.popup {
+	background: hsla(0, 0%, 30%, 0.5);
+	position: fixed;
+	height: 100vh;
+	width: 100vw;
+	transition: all 0.25s;
+	top: 0;
+	display: grid;
+	justify-content: center;
+	align-items: center;
+	pointer-events: none;
+	--opacity: 0;
+	opacity: var(--opacity);
+}
+
+.popup fieldset {
+	background: var(--grey);
+	padding: 2rem;
+	border: 3px solid var(--pink);
+	border-radius: 5px;
+	box-shadow: var(--box-shadow);
+	transition: all 0.2s;
+	--scale: 0.3;
+	transform: scale(var(--scale));
+}
+
+.popup div {
+	background-color: ghostwhite;
+	border-radius: 5px;
+	padding: 2rem;
+}
+
+.popup.open {
+	--opacity: 1;
+	pointer-events: all;
+}
+
+.popup.open fieldset {
+	--scale: 1;
+}
+
+.popup button {
+	background-color: #eebbc3;
+	color: #232946;
+}
+
+.filter-form {
+	display: flex;
+}
+
+.filter-form fieldset {
+	margin: 0;
+	border: none;
+}
+
+.filter-form label {
+	font-size: large;
+}
+
+.filter-form button {
+	background-color: #eebbc3;
+	color: #232946;
+	font-size: 1rem;
+	
+}
+
+body {
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+svg {
+	width: 1.5rem;
+	height: 1.5rem;
+}
+
+/*# sourceMappingURL=/style.e308ff8e.css.map */
