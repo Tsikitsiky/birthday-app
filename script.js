@@ -1,9 +1,7 @@
-//var differenceInYears = require('date-fns/difference_in_years')
 import {handleClicks} from './handlers.js';
 import {main, addBtn, filterNameInput, filterMonthInput, filterForm} from './elements.js';
 import {fetchData} from './libs.js';
 import {birthdayCake, edit, trash} from './svg.js';
-import peopleData from "./people.json";
 let people = [];
 
 //get the array from ls
@@ -13,8 +11,7 @@ const initLocalStorage = () => {
     if(lsItems) {
         people = lsItems
     } else {
-        // fetchData()
-        people = peopleData
+         fetchData()
     }
     //populateTheList();
    dispatchEvent(new CustomEvent('pleaseUpdate'));
@@ -45,6 +42,7 @@ function populateTheList() {
             }
         })
     }
+    
     if(filterMonthInput.value !== '') {
         //console.log(filterMonth)
         people = people.filter(person => new Date(person.birthday).getMonth() == filterMonthInput.value)  
@@ -315,6 +313,20 @@ export const deletePeople = (id) => {
         main.dispatchEvent(new CustomEvent('pleaseUpdate'));
 	});
 }
+
+//hanndle clicks
+// const handleClicks = (e) => {
+//     if(e.target.closest('button.edit')) {
+//         const article = e.target.closest('article');
+//         const id = article.dataset.id;
+//         editPeople(id);
+//     }
+//     if(e.target.closest('button.delete')) {
+//         const article = e.target.closest('article');
+//         const id = article.dataset.id;
+//         deletePeople(id);
+//     }
+// }
 
 //event listeners
 filterNameInput.addEventListener('input', populateTheList);
