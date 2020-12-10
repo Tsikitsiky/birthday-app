@@ -11,9 +11,9 @@ const initLocalStorage = () => {
     if(lsItems) {
         people = lsItems
     } else {
-         fetchData()
+         fetchData();
     }
-    //populateTheList();
+    
    dispatchEvent(new CustomEvent('pleaseUpdate'));
 };
 initLocalStorage();
@@ -28,7 +28,7 @@ const updateLs = () => {
 // };
 
 
-function populateTheList() {
+export function populateTheList() {
     //const peopleSorted = people.sort((person1, person2) => person2.birthday - person1.birthday);
     if(filterNameInput.value !== '') { 
         people = people.filter(person => {
@@ -134,19 +134,25 @@ function populateTheList() {
         return `
         <article data-id="${person.id}">
             <img src="${person.picture}" alt="${person.firstName} ${person.lastName}">
-            <p>${person.firstName} ${person.lastName} <br> ${daysLeft === 0 ? `Today is ${person.firstName}'s birthday`: `Turns ${age} on ${date} ${month}`}</p>
-            <p>${daysLeft === 0 ? `${birthdayCake} ${birthdayCake} ${birthdayCake}` : `${birthdayCake}
-            in ${daysLeft} days`}</p>
-            <p>
-                <button class="edit">
-                    ${edit}
-                </button>
-            </p>
-            <p>
-                <button class="delete">
-                    ${trash}
-                </button>
-            </p>
+            <div>
+                <h3>${person.firstName} ${person.lastName}</h3> 
+                 ${daysLeft === 0 ?
+                 `<span class="greyText">Today is ${person.firstName}'s birthday</span>`
+                 :
+                 `<span class="greyText">Turns <b>${age}</b> on ${month} ${date}</span>`}
+            </div>
+            <div class="daysLeft">
+                <p class="greyText">${daysLeft === 0 ? `${birthdayCake} ${birthdayCake} ${birthdayCake}` : `
+                in ${daysLeft} days`}</p>
+                <p>
+                    <button class="edit">
+                        ${edit}
+                    </button>
+                    <button class="delete">
+                        ${trash}
+                    </button>
+                </p>
+            </div>
         </article>
         `
     }
@@ -200,7 +206,7 @@ function addPeople() {
             id: Date.now(),
             lastName: addForm.lastName.value,
             firstName: addForm.firstName.value,
-            picture: "https://s3.amazonaws.com/uifaces/faces/twitter/jpenico/128.jpg",
+            picture: "https://picsum.photos/100",
             birthday: addForm.birthday.value
         }
         //console.log(newPerson);

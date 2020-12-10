@@ -9,22 +9,18 @@
 	<body>
 		<header>
 			<h1> 
-				<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.701 2.701 0 00-1.5-.454M9 6v2m3-2v2m3-2v2M9 3h.01M12 3h.01M15 3h.01M21 21v-7a2 2 0 00-2-2H5a2 2 0 00-2 2v7h18zm-3-9v-2a2 2 0 00-2-2H8a2 2 0 00-2 2v2h12z"></path></svg>
 				Birthday App
-				<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.701 2.701 0 00-1.5-.454M9 6v2m3-2v2m3-2v2M9 3h.01M12 3h.01M15 3h.01M21 21v-7a2 2 0 00-2-2H5a2 2 0 00-2 2v7h18zm-3-9v-2a2 2 0 00-2-2H8a2 2 0 00-2 2v2h12z"></path></svg>
 			</h1>
-				<p>
-					<button class="add">Add a person to the list</button>
-				</p>
+			<div class="inputs">
 				<form class="filter-form	">
 					<fieldset>
-						<label for="filter-name">Search a name:</label>
+						<label for="filter-name">Filter by name:</label><br />
 						<input type="text" id="filter-name" placeholder="Type a name" />
 					</fieldset>
 					<fieldset>
-						<label for="filter-birthMonth">Birth month:</label>
+						<label for="filter-birthMonth">Filter by month:</label><br />
 						<select id="filter-birthMonth">
-							<option value="">Pick a month</option>
+							<option value="">Select a month</option>
 							<option value="0">January</option>
 							<option value="1">February</option>
 							<option value="2">March</option>
@@ -41,6 +37,8 @@
 					</fieldset>
 					<button class="reset">Reset Filter</button>
 				</form>
+				<button class="add">Add somebody</button>
+			</div>
 		</header>
 		<main>
 			
