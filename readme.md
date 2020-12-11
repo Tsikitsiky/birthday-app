@@ -1,22 +1,16 @@
 # Term 3 JS Project : Birthday App
 
-- In a few sentences, explain the structure of your project.
+This project is a CRUD app which shows people and their birthdays. 
 
-First I fetched the people.json file and strored it in the locale storage. 
-On load, the list is intialised with the data from the locale storage.
-The user can add to the list. They can edit and delete from the list.
-The user can filter the list by their name, first name and last name and filter by birthday month
+The people in the list are from this API: [https://gist.githubusercontent.com/Pinois/e1c72b75917985dc77f5c808e876b67f/raw/93debb7463fbaaec29622221b8f9e719bd5b119f/birthdayPeople.json](https://gist.githubusercontent.com/Pinois/e1c72b75917985dc77f5c808e876b67f/raw/93debb7463fbaaec29622221b8f9e719bd5b119f/birthdayPeople.json)
 
-- If you had more time, what area of your project would you improve?
+- On load, it fetches the above API and strores it in locale storage. 
+- The list is intialised with the data from the locale storage.
+- Users can add people to the list. They can edit and delete from the list.
+- They can filter the list by their name, first name and last name and filter by birthday month
 
-Sorting the people from how many days are left before their birthdays
+While I was doing this project, I learnt how to use date with javascript.
 
-- Did you learn anything new while working on this project?
+Repository: [https://github.com/Tsikitsiky/birthday-app](https://github.com/Tsikitsiky/birthday-app)
 
-I learn using date with javascript
 
-- What was the most challenging part for you?
-
-Finding out a way to sort the people is the most challenging part for me. Refactoring the code using module is also tough
-
-- More explanation with refactoring
