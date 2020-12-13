@@ -238,6 +238,7 @@ export const editPeople = (id) => {
         editForm.innerHTML = `
         
         <div>
+            <h2>Edit ${personToEdit.firstName} ${personToEdit.lastName}</h2>
             <fieldset>
                 <label>Last name</label>
                 <input type="text" name="lastName" value="${personToEdit.lastName}">
@@ -248,7 +249,7 @@ export const editPeople = (id) => {
             </fieldset>
             <fieldset>
                 <label>Birthday</label>
-                <input type="text" name="birthday" value="${new Date(personToEdit.birthday)}">
+                <input type="text" name="birthday" value="${new Date(personToEdit.birthday).toLocaleDateString()}">
             </fieldset>
             <fieldset>
                 <label>Picture</label>
