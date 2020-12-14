@@ -30,8 +30,9 @@ const updateLs = () => {
 
 export function populateTheList() {
     //const peopleSorted = people.sort((person1, person2) => person2.birthday - person1.birthday);
+    let peopleToDisplay = [...people]
     if(filterNameInput.value !== '') { 
-        people = people.filter(person => {
+        peopleToDisplay = people.filter(person => {
             let lowercaseFirstName = person.firstName.toLowerCase();
             let lowercaseLastName = person.lastName.toLowerCase();
             let lowercaseFilter = filterNameInput.value.toLowerCase();
@@ -45,9 +46,9 @@ export function populateTheList() {
     
     if(filterMonthInput.value !== '') {
         //console.log(filterMonth)
-        people = people.filter(person => new Date(person.birthday).getMonth() == filterMonthInput.value)  
+        peopleToDisplay = people.filter(person => new Date(person.birthday).getMonth() == filterMonthInput.value)  
     }
-    const html = people.map(person => {
+    const html = peopleToDisplay.map(person => {
         //manage the dates
         let age = new Date().getFullYear() - new Date(person.birthday).getFullYear();
         let brtDate = new Date(person.birthday).getDate();
