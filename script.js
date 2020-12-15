@@ -48,24 +48,6 @@ function filter() {
 
 
 export function populateTheList(people) {
-    //const peopleSorted = people.sort((person1, person2) => person2.birthday - person1.birthday);
-    // if(filterNameInput.value !== '') { 
-    //     people = people.filter(person => {
-    //         let lowercaseFirstName = person.firstName.toLowerCase();
-    //         let lowercaseLastName = person.lastName.toLowerCase();
-    //         let lowercaseFilter = filterNameInput.value.toLowerCase();
-    //         if(lowercaseFirstName.includes(lowercaseFilter) || lowercaseLastName.includes(lowercaseFilter)) {
-    //             return true;
-    //         } else {
-    //             return false;
-    //         }
-    //     })
-    // }
-
-    // if(filterMonthInput.value !== '') {
-    //     //console.log(filterMonth)
-    //     people = people.filter(person => new Date(person.birthday).getMonth() == filterMonthInput.value)  
-    // }
     const html = people.map(person => {
         //manage the dates
         let age = new Date().getFullYear() - new Date(person.birthday).getFullYear();
@@ -175,7 +157,7 @@ export function populateTheList(people) {
         </article>
         `
     }
-       ).sort((person1, person2) => person2.daysLeft - person1.daysLeft);
+       )
 
         main.innerHTML = html.join('');
        
