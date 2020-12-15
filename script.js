@@ -13,6 +13,7 @@ const initLocalStorage = () => {
     } else {
          fetchData();
     }
+    populateTheList(people);
     
    dispatchEvent(new CustomEvent('pleaseUpdate'));
 };
@@ -22,17 +23,10 @@ const updateLs = () => {
     localStorage.setItem('peopleBirthday', JSON.stringify(people));
 }
 
-//filter
-// const filterList = e => {
-//     populateTheList(e,filterNameInput.value, filterMonthInput.value)
-// };
-
-
-export function populateTheList() {
-    //const peopleSorted = people.sort((person1, person2) => person2.birthday - person1.birthday);
-    let peopleToDisplay = [...people]
+function filter() {
+    let filteredPeople = [...people]
     if(filterNameInput.value !== '') { 
-        peopleToDisplay = people.filter(person => {
+        filteredPeople = filteredPeople.filter(person => {
             let lowercaseFirstName = person.firstName.toLowerCase();
             let lowercaseLastName = person.lastName.toLowerCase();
             let lowercaseFilter = filterNameInput.value.toLowerCase();
@@ -43,12 +37,36 @@ export function populateTheList() {
             }
         })
     }
-    
+
     if(filterMonthInput.value !== '') {
         //console.log(filterMonth)
-        peopleToDisplay = people.filter(person => new Date(person.birthday).getMonth() == filterMonthInput.value)  
+        filteredPeople = filteredPeople.filter(person => new Date(person.birthday).getMonth() == filterMonthInput.value)  
     }
-    const html = peopleToDisplay.map(person => {
+
+    populateTheList(filteredPeople);
+}
+
+
+export function populateTheList(people) {
+    //const peopleSorted = people.sort((person1, person2) => person2.birthday - person1.birthday);
+    // if(filterNameInput.value !== '') { 
+    //     people = people.filter(person => {
+    //         let lowercaseFirstName = person.firstName.toLowerCase();
+    //         let lowercaseLastName = person.lastName.toLowerCase();
+    //         let lowercaseFilter = filterNameInput.value.toLowerCase();
+    //         if(lowercaseFirstName.includes(lowercaseFilter) || lowercaseLastName.includes(lowercaseFilter)) {
+    //             return true;
+    //         } else {
+    //             return false;
+    //         }
+    //     })
+    // }
+
+    // if(filterMonthInput.value !== '') {
+    //     //console.log(filterMonth)
+    //     people = people.filter(person => new Date(person.birthday).getMonth() == filterMonthInput.value)  
+    // }
+    const html = people.map(person => {
         //manage the dates
         let age = new Date().getFullYear() - new Date(person.birthday).getFullYear();
         let brtDate = new Date(person.birthday).getDate();
@@ -182,15 +200,15 @@ function addPeople() {
     <div>
 		<fieldset>
             <label>Last name</label>
-            <input type="text" name="lastName">
+            <input type="text" name="lastName" required>
 		</fieldset>
 		<fieldset>
             <label>First name</label>
-            <input type="text" name="firstName">
+            <input type="text" name="firstName" required>
         </fieldset>
         <fieldset>
             <label>Birthday</label>
-            <input type="date" name="birthday">
+            <input type="date" name="birthday" required>
         </fieldset>
         <fieldset>
             <label>Picture</label>
@@ -215,7 +233,7 @@ function addPeople() {
         //console.log(people);
         destroyPopup(addForm);
         main.dispatchEvent(new CustomEvent('pleaseUpdate'));
-        populateTheList();
+        populateTheList(people);
     });
 
     //cancel
@@ -268,9 +286,10 @@ export const editPeople = (id) => {
             personToEdit.firstName = editForm.firstName.value;
             personToEdit.birthday = editForm.birthday.value;
             personToEdit.picture = editForm.picture.value;
-            populateTheList();
+            main.dispatchEvent(new CustomEvent('pleaseUpdate'));
+            populateTheList(people);
             destroyPopup(editForm);
-            main.dispatchEvent(new CustomEvent('pleaseUpdate'));   
+               
         }, {once: true});
 
         //cancel
@@ -308,7 +327,7 @@ export const deletePeople = (id) => {
                 } 
                 people = people.filter(person => person.id !== id);
                 main.dispatchEvent(new CustomEvent('pleaseUpdate')); 
-				populateTheList();
+				populateTheList(people);
                 destroyPopup(deletePopup);
 			}
 			if(e.target.matches('button.cancel')){
@@ -322,23 +341,10 @@ export const deletePeople = (id) => {
 	});
 }
 
-//hanndle clicks
-// const handleClicks = (e) => {
-//     if(e.target.closest('button.edit')) {
-//         const article = e.target.closest('article');
-//         const id = article.dataset.id;
-//         editPeople(id);
-//     }
-//     if(e.target.closest('button.delete')) {
-//         const article = e.target.closest('article');
-//         const id = article.dataset.id;
-//         deletePeople(id);
-//     }
-// }
 
 //event listeners
-filterNameInput.addEventListener('input', populateTheList);
-filterMonthInput.addEventListener('change', populateTheList);
+filterNameInput.addEventListener('input', filter);
+filterMonthInput.addEventListener('change', filter);
 addBtn.addEventListener('click', addPeople);
 main.addEventListener('pleaseUpdate', updateLs);
 main.addEventListener('click', handleClicks);

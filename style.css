@@ -117,7 +117,7 @@ input, select {
 .popup div {
 	background-color: ghostwhite;
 	border-radius: 5px;
-	padding: 2rem;
+	padding: 3rem;
 }
 
 .popup.open {
@@ -127,12 +127,21 @@ input, select {
 
 .popup.open fieldset {
 	--scale: 1;
+	padding: 1rem 0;
 }
 
 .popup button {
 	background-color: #eebbc3;
 	color: #232946;
+	width: 100px;
+	height: 40px;
 }
+
+.popup .cancel {
+	background-color: transparent;
+	border: 1px solid #232946;
+}
+
 
 .filter-form {
 	display: flex;
